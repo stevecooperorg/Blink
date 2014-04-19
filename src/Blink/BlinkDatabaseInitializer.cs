@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Blink.SQL;
 
 namespace Blink
 {
@@ -13,41 +15,77 @@ namespace Blink
         where TContext : DbContext
         where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()
     {
-        private readonly string cacheLocation;
+        private readonly BlinkPreparationContext context;
 
-        public BlinkDatabaseInitializer(string cacheLocation)
+        public BlinkDatabaseInitializer(BlinkPreparationContext context)
         {
-            this.cacheLocation = cacheLocation;  
+            this.context = context; 
         }
 
         public void InitializeDatabase(TContext context)
         {
             // make sure the file cache exists;
-            Directory.CreateDirectory(this.cacheLocation);
+            //Directory.CreateDirectory(this.context.BackupLocation);
 
             // identify this context in the cache;
             var hash = context.DbContextHash();
-
-            var backupFile = Path.Combine(this.cacheLocation, string.Format("BlinkDb_{0}.bak", hash));
-
+            var dbName = context.Database.Connection.Database;
+            var backupFile = Path.Combine(this.context.BackupLocation, string.Format("BlinkDb_{0}.bak", hash));
+   
+            // is there a backup file for this context?
             bool backupExists = File.Exists(backupFile);
 
-            throw new NotImplementedException();
+            if (backupExists)
+            {
+                // nuke the database and restore the backup;
+                ForceDropDatabase(context);
 
-            //if (context.Database.Exists())
-            //{
-            //    // set the database to SINGLE_USER so it can be dropped
-            //    context.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, "ALTER DATABASE [" + context.Database.Connection.Database + "] SET SINGLE_USER WITH ROLLBACK IMMEDIATE");
+                RestoreDb(context, backupFile);
+            }
+            else
+            {
+                // rebuild db from scratch and backup;
+                ForceDropDatabase(context);
+                BuildDb(context);
+                BackupDb(context, backupFile);
+            }
+        }
 
-            //    // drop the database
-            //    context.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, "USE master DROP DATABASE [" + context.Database.Connection.Database + "]");
-            //}
+        private void RestoreDb(TContext context, string backupFile)
+        {
+            context.ExecuteSqlAsMaster(SqlScripts.Restore, new
+            {
+                databaseName = context.Database.Connection.Database,
+                backupPath = backupFile
+            });
+        }
 
-            //// SC: some code below from http://stackoverflow.com/a/15919627/6722
-            //var config = new TMigrationsConfiguration();
-            //config.TargetDatabase = new System.Data.Entity.Infrastructure.DbConnectionInfo(context.Database.Connection.ConnectionString, "System.Data.SqlClient");
-            //var migrator = new DbMigrator(config);
-            //migrator.Update();
+        private void BackupDb(TContext context, string backupFile)
+        {
+            context.ExecuteSqlAsMaster(SqlScripts.Backup, new {
+                sourceDb = context.Database.Connection.Database,
+                backupPath = backupFile
+            });
+        }
+
+        private void BuildDb(TContext context)
+        {
+            var config = new TMigrationsConfiguration();
+            config.TargetDatabase = new System.Data.Entity.Infrastructure.DbConnectionInfo(context.Database.Connection.ConnectionString, "System.Data.SqlClient");
+            var migrator = new DbMigrator(config);
+            migrator.Update();
+        }
+
+        private void ForceDropDatabase(TContext context)
+        {
+            if (context.Database.Exists())
+            {
+                // set the database to SINGLE_USER so it can be dropped
+                context.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, "ALTER DATABASE [" + context.Database.Connection.Database + "] SET SINGLE_USER WITH ROLLBACK IMMEDIATE");
+
+                // drop the database
+                context.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, "USE master DROP DATABASE [" + context.Database.Connection.Database + "]");
+            }
         }
     }
 }

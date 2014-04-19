@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Blink.Tests.TestDb
+namespace Blink.Tests.TestDb.Migrations
 {
     public class TestDbConfiguration : DbMigrationsConfiguration<TestDbContext>
     {

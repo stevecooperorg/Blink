@@ -14,17 +14,17 @@ namespace Blink
     {
 
         private readonly BlinkDbFactoryMethod<TContext> createContext;
-        private readonly string cacheLocation;
+        private readonly BlinkPreparationContext context;
 
-        internal BlinkDbFactory(BlinkDbFactoryMethod<TContext> createContext, string cacheLocation)
+        internal BlinkDbFactory(BlinkDbFactoryMethod<TContext> createContext, BlinkPreparationContext context)
         {
             this.createContext = createContext;
-            this.cacheLocation = cacheLocation;
+            this.context = context;
         }
 
         public void ExecuteDbCode(BlinkDbWorkerMethod<TContext> workPayload)
         {
-            var initializer = new BlinkDatabaseInitializer<TContext, TMigrationsConfiguration>(this.cacheLocation);
+            var initializer = new BlinkDatabaseInitializer<TContext, TMigrationsConfiguration>(this.context);
             Database.SetInitializer<TContext>(initializer);
 
             var ctx = this.createContext();
