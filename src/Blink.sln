@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30324.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blink", "Blink\Blink.csproj", "{94916B43-34A2-4374-A910-F722529DC76B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blink.Tests", "Blink.Tests\Blink.Tests.csproj", "{59578F3C-7A04-460D-B3FE-A9120A8BCAAE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94916B43-34A2-4374-A910-F722529DC76B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94916B43-34A2-4374-A910-F722529DC76B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94916B43-34A2-4374-A910-F722529DC76B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94916B43-34A2-4374-A910-F722529DC76B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59578F3C-7A04-460D-B3FE-A9120A8BCAAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59578F3C-7A04-460D-B3FE-A9120A8BCAAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59578F3C-7A04-460D-B3FE-A9120A8BCAAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59578F3C-7A04-460D-B3FE-A9120A8BCAAE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
