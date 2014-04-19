@@ -2,7 +2,7 @@
 
 # Blink
 
-A library for resetting Entity Framework databases as fast as possible, for integration testing.
+A library for resetting Entity Framework databases as fast as possible, for integration testing. Available on NuGet at [https://www.nuget.org/packages/Blink/]()
 
 ## Introduction
 
