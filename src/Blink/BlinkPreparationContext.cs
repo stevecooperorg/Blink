@@ -11,10 +11,12 @@ namespace Blink
         public string BackupLocation { get; private set; }
         public string DataLocation { get; private set; }
 
-        public BlinkPreparationContext(string backupLocation, string dataLocation)
+        public BlinkDBCreationMode DBCreationMode { get; private set; }
+        public BlinkPreparationContext(string backupLocation, string dataLocation, BlinkDBCreationMode dbCreationMode)
         {
             this.BackupLocation = backupLocation;
             this.DataLocation = dataLocation;
+            this.DBCreationMode = dbCreationMode;
         }
     }
 }

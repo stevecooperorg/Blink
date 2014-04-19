@@ -10,7 +10,7 @@ namespace Blink
 {
     public class BlinkDB
     {
-        public static BlinkDbFactory<TContext, TMigrationsConfiguration> CreateDbFactory<TContext, TMigrationsConfiguration>(BlinkDbFactoryMethod<TContext> createContext) 
+        public static BlinkDbFactory<TContext, TMigrationsConfiguration> CreateDbFactory<TContext, TMigrationsConfiguration>(BlinkDBCreationMode dbCreationMode, BlinkDbFactoryMethod<TContext> createContext) 
             where TContext : DbContext 
             where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()
 
@@ -20,7 +20,7 @@ namespace Blink
             var backupLocation = @"C:\Program Files\Microsoft SQL Server\MSSQL11.MSSQLSERVER\MSSQL\Backup";
             var dataLocation = @"C:\Program Files\Microsoft SQL Server\MSSQL11.MSSQLSERVER\MSSQL\Data";
 
-            var context = new BlinkPreparationContext(backupLocation, dataLocation);
+            var context = new BlinkPreparationContext(backupLocation, dataLocation, dbCreationMode);
             var factory = new BlinkDbFactory<TContext, TMigrationsConfiguration>(createContext, context);
             return factory;
 

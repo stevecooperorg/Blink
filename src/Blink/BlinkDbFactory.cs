@@ -25,6 +25,7 @@ namespace Blink
         public void ExecuteDbCode(BlinkDBWorkerMethod<TContext> workPayload)
         {
             var initializer = new BlinkDatabaseInitializer<TContext, TMigrationsConfiguration>(this.context);
+            //var initializer = new NullDatabaseInitializer<TContext>();
             Database.SetInitializer<TContext>(initializer);
 
             var ctx = this.createContext();

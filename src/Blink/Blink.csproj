@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="BlinkDatabaseInitializer.cs" />
     <Compile Include="BlinkDB.cs" />
+    <Compile Include="BlinkDBCreationMode.cs" />
     <Compile Include="BlinkDBFactory.cs" />
     <Compile Include="BlinkDBFactoryMethod.cs" />
     <Compile Include="BlinkDBWorkerMethod.cs" />

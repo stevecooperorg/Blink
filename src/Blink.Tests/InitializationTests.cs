@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Blink.Tests.TestDb;
 using Blink.Tests.TestDb.Migrations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,6 +14,7 @@ namespace Blink.Tests
         {
             // Create a new BlinkDBFactory;
             var factory = Blink.BlinkDB.CreateDbFactory<TestDbContext, TestDbConfiguration>(
+                BlinkDBCreationMode.RecreateEveryTest,
                 () => new TestDbContext());
 
             bool called = false;
@@ -24,6 +26,10 @@ namespace Blink.Tests
                 {
                     // use the context here;
                     Assert.IsNotNull(context);
+
+                    context.TestObjects.Add(new TestObject { Name = "quux" });
+                    context.SaveChanges();
+                    Assert.AreEqual(4, context.TestObjects.Count(), "doesn't look transactional!");
 
                     called = true;
                 });

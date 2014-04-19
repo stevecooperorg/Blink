@@ -24,8 +24,19 @@ namespace Blink
 
         public void InitializeDatabase(TContext context)
         {
-            // make sure the file cache exists;
-            //Directory.CreateDirectory(this.context.BackupLocation);
+            var mode = this.context.DBCreationMode;
+            if (!context.Database.Exists())
+            {
+                // we can't re-use the db if it doesn't yet exist, so for this run we're
+                // switching to creating it;
+                mode = BlinkDBCreationMode.RecreateEveryTest;
+            }
+
+            if (mode == BlinkDBCreationMode.UseDBIfItAlreadyExists)
+            {
+                // no need to do anything
+                return;
+            }
 
             // identify this context in the cache;
             var hash = context.DbContextHash();
@@ -40,11 +51,12 @@ namespace Blink
                 // nuke the database and restore the backup;
                 ForceDropDatabase(context);
 
+                // restore from disk
                 RestoreDb(context, backupFile);
             }
             else
             {
-                // rebuild db from scratch and backup;
+                // rebuild db from scratch and backup for later runs;
                 ForceDropDatabase(context);
                 BuildDb(context);
                 BackupDb(context, backupFile);
