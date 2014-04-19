@@ -14,7 +14,7 @@ namespace Blink.Tests
         {
             // Create a new BlinkDBFactory;
             var factory = Blink.BlinkDB.CreateDbFactory<TestDbContext, TestDbConfiguration>(
-                BlinkDBCreationMode.RecreateEveryTest,
+                BlinkDBCreationMode.UseDBIfItAlreadyExists,
                 () => new TestDbContext());
 
             bool called = false;
