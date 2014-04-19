@@ -15,47 +15,24 @@ Here's how to use it...
 
 ## Usage
 
-    // use Blink to create a new database;
-    var factory = Blink.CreateDbFactory<MyContext, MyEfProject.Configuration>( () => new MyContext() );
+
+    // Create a new BlinkDBFactory, maybe inside [TestInitialize] or [SetUp]
+    var factory = Blink.BlinkDB.CreateDbFactory<TestDbContext, TestDbConfiguration>(
+         () => new TestDbContext());
     
-    using(var ctx = factory.GetDatabase())
+    // Execute code, inside a transaction, with a fresh DB every time;
+    factory.ExecuteDbCode(context =>
     {
         // use the context here;
-        ...
-    }
- 
-OR THIS???
-
-    // use Blink to create a new database;
-    var factory = Blink.CreateDbFactory<MyContext, MyEfProject.Configuration>( () => new MyContext() );
-    
-    factory.ExecuteDbCode(context => {
-        // use the context here;
-        ...
+        
     });
-
-
-<!--
-    // use the Blink initializer;
-    var initializer = new BlinkInitializer<MyContext, MyEfProject.Configuration>(usingTransactions: false);
-    Database.SetInitializer<AiTrackRecordContext>(initializer);
-    
-    // create your context;
-    using(var context = new MyContext())
-    {
-        context.Database.Initialize(force: true);
-    
-        // use the context here;
-        ...
-    }
--->
 
 What does it do?
 -----
 
 The first time it's called, it creates a database from scratch, applying all migrations and running the seed method, so that you have a fresh Entity Framework database, just as if you'd deleted the DB and called 'update-database' in the Package Manager console. 
 
-Subsequent times, it searches a cache for a backup, and restores the backup instead of rebuilding the database. This means that your tests now work much faster.
+Subsequent times, it searches a cache for a backup, and restores the backup instead of rebuilding the database. This means that your tests should now work much faster.
 
 <!--
 

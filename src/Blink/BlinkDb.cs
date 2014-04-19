@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Blink
 {
-    public class BlinkDb
+    public class BlinkDB
     {
         public static BlinkDbFactory<TContext, TMigrationsConfiguration> CreateDbFactory<TContext, TMigrationsConfiguration>(BlinkDbFactoryMethod<TContext> createContext) 
             where TContext : DbContext 

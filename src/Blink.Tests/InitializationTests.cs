@@ -11,13 +11,15 @@ namespace Blink.Tests
         [TestMethod]
         public void ShouldInitializeANewContext()
         {
-            // use Blink to create a new database;
-            var factory = Blink.BlinkDb.CreateDbFactory<TestDbContext, TestDbConfiguration>(() => new TestDbContext());
+            // Create a new BlinkDBFactory;
+            var factory = Blink.BlinkDB.CreateDbFactory<TestDbContext, TestDbConfiguration>(
+                () => new TestDbContext());
 
             bool called = false;
 
             for (var i = 0; i < 10; i++)
             {
+                // execute code, inside a transaction, with a fresh DB every time;
                 factory.ExecuteDbCode(context =>
                 {
                     // use the context here;

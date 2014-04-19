@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace Blink
 {
-    public delegate void BlinkDbWorkerMethod<TContext>(TContext context) where TContext : DbContext;
+    public delegate void BlinkDBWorkerMethod<TContext>(TContext context) where TContext : DbContext;
 }

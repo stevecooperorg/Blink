@@ -22,7 +22,7 @@ namespace Blink
             this.context = context;
         }
 
-        public void ExecuteDbCode(BlinkDbWorkerMethod<TContext> workPayload)
+        public void ExecuteDbCode(BlinkDBWorkerMethod<TContext> workPayload)
         {
             var initializer = new BlinkDatabaseInitializer<TContext, TMigrationsConfiguration>(this.context);
             Database.SetInitializer<TContext>(initializer);

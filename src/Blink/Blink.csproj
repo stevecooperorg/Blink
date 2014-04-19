@@ -47,10 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlinkDatabaseInitializer.cs" />
-    <Compile Include="BlinkDb.cs" />
-    <Compile Include="BlinkDbFactory.cs" />
-    <Compile Include="BlinkDbFactoryMethod.cs" />
-    <Compile Include="BlinkDbWorkerMethod.cs" />
+    <Compile Include="BlinkDB.cs" />
+    <Compile Include="BlinkDBFactory.cs" />
+    <Compile Include="BlinkDBFactoryMethod.cs" />
+    <Compile Include="BlinkDBWorkerMethod.cs" />
     <Compile Include="BlinkPreparationContext.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
