@@ -24,6 +24,17 @@ Here's how to use it...
         ...
     }
  
+OR THIS???
+
+    // use Blink to create a new database;
+    var factory = Blink.CreateDbFactory<MyContext, MyEfProject.Configuration>( () => new MyContext() );
+    
+    factory.ExecuteDbCode(context => {
+        // use the context here;
+        ...
+    });
+
+
 <!--
     // use the Blink initializer;
     var initializer = new BlinkInitializer<MyContext, MyEfProject.Configuration>(usingTransactions: false);
@@ -89,6 +100,6 @@ While the library will keep your database initializations fast, it does this by 
 
 To fix this, it's necessary to wipe Blink's cache of database backups. They live in your personal AppData directory, in
 
-    C:\Users\firstname.lastname\AppData\Local\Blink
+    C:\Users\firstname.lastname\AppData\Roaming\Blink
 
 Delete the contents of this folder between test runs to reset the cache and get your testing back on track.
