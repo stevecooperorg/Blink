@@ -19,7 +19,7 @@ namespace Blink.Tests
 
             bool called = false;
 
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < 5; i++)
             {
                 // execute code, inside a transaction, with a fresh DB every time;
                 factory.ExecuteDbCode(context =>

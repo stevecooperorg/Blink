@@ -19,12 +19,14 @@ Here's how to use it...
         BlinkDBCreationMode.UseDBIfItAlreadyExists,
          () => new TestDbContext());
     
-    // Execute code, inside a transaction, with a fresh DB every time;
+    // Execute code, inside a transaction;
     factory.ExecuteDbCode(context =>
     {
         // use the context here;
         
     });
+    
+    // db edits are rolled back automatically
 
 What does it do?
 -----
@@ -43,7 +45,9 @@ Blink comes with two modes;
 
 ## Gotchas
 
-While the library will keep your database initializations fast, it does this by avoiding all the expensive tests that EF to make sure the database hasn't gone stale. So several things might cause the caching to go wrong;
+**Threading.** This code is not thread-safe. Don't use it yet with a multi-threaded test runner. I'll get to that when I can.
+
+**Staleness.** While the library will keep your database initializations fast, it does this by avoiding all the expensive tests that EF to make sure the database hasn't gone stale. So several things might cause the caching to go wrong;
 
 1) You change the content of the `Configuration.Seed()` method. If you seed different data, Blink doesn't know about it, and it's internal cache will be stale.
 

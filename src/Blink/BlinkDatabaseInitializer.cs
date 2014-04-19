@@ -25,17 +25,12 @@ namespace Blink
         public void InitializeDatabase(TContext context)
         {
             var mode = this.context.DBCreationMode;
-            if (!context.Database.Exists())
+            var dbExists = context.Database.Exists();
+            if (!dbExists)
             {
                 // we can't re-use the db if it doesn't yet exist, so for this run we're
                 // switching to creating it;
                 mode = BlinkDBCreationMode.RecreateEveryTest;
-            }
-
-            if (mode == BlinkDBCreationMode.UseDBIfItAlreadyExists)
-            {
-                // no need to do anything
-                return;
             }
 
             // identify this context in the cache;
@@ -46,18 +41,33 @@ namespace Blink
             // is there a backup file for this context?
             bool backupExists = File.Exists(backupFile);
 
+            if (!backupExists)
+            {
+                // no backup for this version -- we'll need to 
+                // recreate - the DB will be out of date.
+                mode = BlinkDBCreationMode.RecreateEveryTest;
+            }
+
+            if (mode == BlinkDBCreationMode.UseDBIfItAlreadyExists)
+            {
+                // no need to do anything
+                return;
+            }
+
+            if (dbExists)
+            { 
+                // nuke the database
+                ForceDropDatabase(context);
+            }
+
             if (backupExists)
             {
-                // nuke the database and restore the backup;
-                ForceDropDatabase(context);
-
                 // restore from disk
                 RestoreDb(context, backupFile);
             }
             else
             {
                 // rebuild db from scratch and backup for later runs;
-                ForceDropDatabase(context);
                 BuildDb(context);
                 BackupDb(context, backupFile);
             }
