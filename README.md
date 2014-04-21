@@ -6,7 +6,7 @@ A library for resetting Entity Framework databases as fast as possible, for inte
 
 ## Introduction
 
-When performing automated testing, it can be very expensive to initialize a fresh, real database. So expensive that you avoid testing against the real database at all costs. The project that inspired me to start this library takes about a minute to build its database; which is fine in a deployment scenario, but intolerable if you want to write tens or hundreds of integration tests.
+When performing automated testing, it can be very expensive to initialize a fresh, real database. So expensive that you avoid testing against the real database at all costs. For example, the project that inspired me to start this library takes about a minute to build its database; that's fine in a deployment scenario, but intolerable if you want to write tens or hundreds of integration tests. Blink re-initialises the DB in ~3s. That's fast enough for TDD, if you're careful about which tests you run.
 
 This package helps you keep database initialization as fast as possible, to make it more feasible to perform database tests and give you more confidence about the operation of your database.
 
