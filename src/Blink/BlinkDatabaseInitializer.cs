@@ -42,7 +42,8 @@ namespace Blink
             var hash = context.DbContextHash().WithoutPathCharacters();
 
             var dbName = context.Database.Connection.Database;
-            var backupFile = Path.Combine(this.context.BackupLocation, string.Format("BlinkDb_{0}.bak", hash));
+            var safeDbName = dbName.WithoutPathCharacters();
+            var backupFile = Path.Combine(this.context.BackupLocation, string.Format("BlinkDb_{0}_{1}.bak", safeDbName, hash));
 
             // is there a backup file for this context?
             bool backupExists = File.Exists(backupFile);
