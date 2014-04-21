@@ -60,6 +60,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SqlScripts.resx</DependentUpon>
     </Compile>
+    <Compile Include="Util\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -68,8 +69,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SQL\Backup.sql" />
-    <Content Include="SQL\Restore.sql" />
+    <None Include="SQL\Backup.sql" />
+    <None Include="SQL\Restore.sql" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SQL\SqlScripts.resx">
@@ -77,6 +78,7 @@
       <LastGenOutput>SqlScripts.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

@@ -67,6 +67,7 @@
     <Compile Include="TestDb\Migrations\TestDbConfiguration.cs" />
     <Compile Include="TestDb\TestDbContext.cs" />
     <Compile Include="TestDb\TestObject.cs" />
+    <Compile Include="Util\StringExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Blink\Blink.csproj">
