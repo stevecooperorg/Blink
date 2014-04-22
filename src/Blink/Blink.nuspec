@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>0.0.1-alpha003</version>
+    <version>0.0.1-alpha004</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/stevecooperorg/Blink</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>A very early version.</releaseNotes>
+    <releaseNotes>Backup location is now picked up automatically, meaning it's not hard-coded to Steve's SQL Server instance.</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>TDD Integration EF</tags>
   </metadata>

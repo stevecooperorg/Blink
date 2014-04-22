@@ -17,9 +17,9 @@ namespace Blink
         where TContext : DbContext
         where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()
     {
-        private readonly BlinkPreparationContext context;
+        private readonly BlinkPreparationOptions context;
 
-        public BlinkDatabaseInitializer(BlinkPreparationContext context)
+        public BlinkDatabaseInitializer(BlinkPreparationOptions context)
         {
             this.context = context;
         }
@@ -38,12 +38,17 @@ namespace Blink
                 mode = BlinkDBCreationMode.RecreateEveryTest;
             }
 
+            Log("Reading SQL Server configuration and backup directory");
+            var sqlServer = new SqlServerInfo(context);
+            var backupDirectory = sqlServer.GetBackupDirectory();
+            Log("Backup directory is " + backupDirectory);
+
             // identify this context in the cache;
             var hash = context.DbContextHash().WithoutPathCharacters();
 
             var dbName = context.Database.Connection.Database;
             var safeDbName = dbName.WithoutPathCharacters();
-            var backupFile = Path.Combine(this.context.BackupLocation, string.Format("BlinkDb_{0}_{1}.bak", safeDbName, hash));
+            var backupFile = Path.Combine(backupDirectory, string.Format("BlinkDb_{0}_{1}.bak", safeDbName, hash));
 
             // is there a backup file for this context?
             bool backupExists = File.Exists(backupFile);

@@ -64,6 +64,8 @@
       <DependentUpon>201404192019062_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegexAssert.cs" />
+    <Compile Include="SqlServerInfoTests.cs" />
     <Compile Include="TestDb\Migrations\TestDbConfiguration.cs" />
     <Compile Include="TestDb\TestDbContext.cs" />
     <Compile Include="TestDb\TestObject.cs" />

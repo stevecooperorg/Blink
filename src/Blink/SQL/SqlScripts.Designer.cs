@@ -61,7 +61,8 @@ namespace Blink.SQL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BACKUP DATABASE @sourceDb TO DISK = @backupPath.
+        ///   Looks up a localized string similar to BACKUP DATABASE @sourceDb TO DISK = @backupPath
+        ///.
         /// </summary>
         internal static string Backup {
             get {
@@ -70,13 +71,25 @@ namespace Blink.SQL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SET @destMdf = @sqlServerDbFolder + @destDb + &apos;.mdf&apos;
-        ///SET @destLdf = @sqlServerDbFolder + @destDb + &apos;_log&apos; + &apos;.ldf&apos;
+        ///   Looks up a localized string similar to DECLARE @path NVARCHAR(4000) 
         ///
-        ///RESTORE DATABASE @destDb FROM DISK = @backupPath
-        ///WITH REPLACE,
-        ///   MOVE @sourceDb     TO @destMdf,
-        ///   MOVE @sourceDb_log TO @destLdf.
+        ///EXEC master.dbo.xp_instance_regread 
+        ///        N&apos;HKEY_LOCAL_MACHINE&apos;, 
+        ///        N&apos;Software\Microsoft\MSSQLServer\MSSQLServer&apos;,N&apos;BackupDirectory&apos;, 
+        ///        @path OUTPUT,  
+        ///        &apos;no_output&apos; 
+        ///select @path .
+        /// </summary>
+        internal static string GetBackupDirectory {
+            get {
+                return ResourceManager.GetString("GetBackupDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RESTORE DATABASE @databaseName 
+        ///FROM DISK = @backupPath
+        ///.
         /// </summary>
         internal static string Restore {
             get {

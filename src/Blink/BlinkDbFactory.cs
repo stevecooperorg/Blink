@@ -13,33 +13,38 @@ namespace Blink
         where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()
     {
 
-        private readonly BlinkDbFactoryMethod<TContext> createContext;
-        private readonly BlinkPreparationContext context;
+        private static object globalSyncRoot = new object();
 
-        internal BlinkDbFactory(BlinkDbFactoryMethod<TContext> createContext, BlinkPreparationContext context)
+        private readonly BlinkDbFactoryMethod<TContext> createContext;
+        private readonly BlinkPreparationOptions preparationOptions;
+
+        internal BlinkDbFactory(BlinkDbFactoryMethod<TContext> createContext, BlinkPreparationOptions preparationOptions)
         {
             this.createContext = createContext;
-            this.context = context;
+            this.preparationOptions = preparationOptions;
         }
 
         public void ExecuteDbCode(BlinkDBWorkerMethod<TContext> workPayload)
         {
-            var initializer = new BlinkDatabaseInitializer<TContext, TMigrationsConfiguration>(this.context);
-            //var initializer = new NullDatabaseInitializer<TContext>();
-            Database.SetInitializer<TContext>(initializer);
-
-            var ctx = this.createContext();
-
-            ctx.Database.Initialize(force: true);
-
-            var tran = ctx.Database.BeginTransaction();
-            try
+            lock (globalSyncRoot)
             {
-                workPayload(ctx);
-            }
-            finally
-            {
-                tran.Rollback();
+                var initializer = new BlinkDatabaseInitializer<TContext, TMigrationsConfiguration>(this.preparationOptions);
+                //var initializer = new NullDatabaseInitializer<TContext>();
+                Database.SetInitializer<TContext>(initializer);
+
+                var ctx = this.createContext();
+
+                ctx.Database.Initialize(force: true);
+
+                var tran = ctx.Database.BeginTransaction();
+                try
+                {
+                    workPayload(ctx);
+                }
+                finally
+                {
+                    tran.Rollback();
+                }
             }
         }
     }

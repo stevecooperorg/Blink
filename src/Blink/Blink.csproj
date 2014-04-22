@@ -52,9 +52,10 @@
     <Compile Include="BlinkDBFactory.cs" />
     <Compile Include="BlinkDBFactoryMethod.cs" />
     <Compile Include="BlinkDBWorkerMethod.cs" />
-    <Compile Include="BlinkPreparationContext.cs" />
+    <Compile Include="BlinkPreparationOptions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlServerInfo.cs" />
     <Compile Include="SQL\SqlScripts.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -78,7 +79,9 @@
       <LastGenOutput>SqlScripts.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="SQL\GetBackupDirectory.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

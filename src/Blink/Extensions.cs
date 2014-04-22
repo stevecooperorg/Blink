@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +14,26 @@ namespace Blink
 {
     internal static class Extensions
     {
-        public static void ExecuteSqlAsMaster(this DbContext context, string sql, object paramObject)
+        public static DataSet QuerySqlAsMaster(this DbContext context, string sql, object paramObject = null)
+        {
+            return ExecuteSqlCommand(context, sql, paramObject, cmd =>
+            {
+                var adapter = new SqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+                return ds;
+            });
+        }
+
+        public static int ExecuteSqlAsMaster(this DbContext context, string sql, object paramObject = null)
+        {
+            return ExecuteSqlCommand(context, sql, paramObject, cmd => cmd.ExecuteNonQuery());
+        }
+
+        private static T ExecuteSqlCommand<T>(DbContext context, string sql, object paramObject, Func<SqlCommand, T> executeCommand)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
-            var properties = paramObject.GetType().GetProperties();
+            var properties = paramObject == null ? new PropertyInfo[0] : paramObject.GetType().GetProperties();
 
             foreach (var property in properties)
             {
@@ -39,14 +57,9 @@ namespace Blink
                     command.CommandTimeout = 60;
                     command.CommandText = sql;
                     command.Parameters.AddRange(parameters.ToArray());
-                    command.ExecuteNonQuery();
-                }                
+                    return executeCommand(command);
+                }
             }
-
-            //context.Database.ExecuteSqlCommand(
-            //    TransactionalBehavior.DoNotEnsureTransaction, 
-            //    sql, 
-            //    parameters.ToArray());
         }
 
         public static string ToEdmx(this DbContext context)

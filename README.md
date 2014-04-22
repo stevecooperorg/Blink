@@ -45,7 +45,7 @@ Blink comes with two modes;
 
 ## Gotchas
 
-**Threading.** This code is not thread-safe. Don't use it yet with a multi-threaded test runner. I'll get to that when I can.
+**Threading.** The threading is pretty brutal. There is a global lock applied to any work done on the database. That makes it safe, but there's no way to run, say, three sets of tests over different databases.
 
 **Staleness.** While the library will keep your database initializations fast, it does this by avoiding all the expensive tests that EF to make sure the database hasn't gone stale. So several things might cause the caching to go wrong;
 

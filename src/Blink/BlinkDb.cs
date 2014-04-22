@@ -15,13 +15,8 @@ namespace Blink
             where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()
 
         {
-            //var appData = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            //var cacheLocation = System.IO.Path.Combine(appData, @"Blink\DatabaseCache");
-            var backupLocation = @"C:\Program Files\Microsoft SQL Server\MSSQL11.MSSQLSERVER\MSSQL\Backup";
-            var dataLocation = @"C:\Program Files\Microsoft SQL Server\MSSQL11.MSSQLSERVER\MSSQL\Data";
-
-            var context = new BlinkPreparationContext(backupLocation, dataLocation, dbCreationMode);
-            var factory = new BlinkDbFactory<TContext, TMigrationsConfiguration>(createContext, context);
+            var options = new BlinkPreparationOptions(dbCreationMode);
+            var factory = new BlinkDbFactory<TContext, TMigrationsConfiguration>(createContext, options);
             return factory;
 
         }
