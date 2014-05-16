@@ -61,6 +61,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SqlScripts.resx</DependentUpon>
     </Compile>
+    <Compile Include="Util\Logging.cs" />
     <Compile Include="Util\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

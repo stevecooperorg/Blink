@@ -93,8 +93,7 @@ namespace Blink
 
         private void Log(string message)
         {
-            Debug.WriteLine(message);
-            //Console.WriteLine(message);
+            Logging.Log(message);
         }
 
         private void RestoreDb(TContext context, string backupFile)
