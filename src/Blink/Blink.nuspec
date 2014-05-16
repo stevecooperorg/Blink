@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>0.0.1-alpha005</version>
+    <version>0.0.1-alpha006</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/stevecooperorg/Blink</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Better (debug) logging to help you detect where time is taken in the process.</releaseNotes>
+    <releaseNotes>more helpful times; each log shows milliseconds since last log, allowing easy tracing.</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>TDD Integration EF</tags>
   </metadata>

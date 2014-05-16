@@ -44,7 +44,9 @@ namespace Blink
             Log("Backup directory is " + backupDirectory);
 
             // identify this context in the cache;
+            Log("Calculating DB hash");
             var hash = context.DbContextHash().WithoutPathCharacters();
+            Log("DB hash calculated");
 
             var dbName = context.Database.Connection.Database;
             var safeDbName = dbName.WithoutPathCharacters();
