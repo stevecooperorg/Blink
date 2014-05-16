@@ -24,6 +24,8 @@ namespace Blink
             this.context = context;
         }
 
+        private static string previouslyCalculatedHash = null;
+
         public void InitializeDatabase(TContext context)
         {
             Log("Initializing " + context.Database.Connection.Database);
@@ -44,10 +46,22 @@ namespace Blink
             Log("Backup directory is " + backupDirectory);
 
             // identify this context in the cache;
-            Log("Calculating DB hash");
-            var hash = context.DbContextHash().WithoutPathCharacters();
-            Log("DB hash calculated");
+            string hash;
+            if (previouslyCalculatedHash == null)
+            {
+                Log("Calculating DB hash");
+            
+                hash = context.DbContextHash().WithoutPathCharacters();
+                previouslyCalculatedHash = hash;
+                Log("DB hash calculated");
+            } 
+            else
+            {
+                Log("Hash has already been calculated this run!");
+                hash = previouslyCalculatedHash;
+            }
 
+            
             var dbName = context.Database.Connection.Database;
             var safeDbName = dbName.WithoutPathCharacters();
             var backupFile = Path.Combine(backupDirectory, string.Format("BlinkDb_{0}_{1}.bak", safeDbName, hash));
@@ -87,6 +101,9 @@ namespace Blink
                 // rebuild db from scratch and backup for later runs;
                 BuildDb(context);
                 BackupDb(context, backupFile);
+
+                // because this is a new DB, the hash needs to be cleared
+                previouslyCalculatedHash = null;
             }
 
             Log("The database already exists. Initialization is complete.");
