@@ -30,7 +30,7 @@ namespace Blink
             this.preparationOptions = preparationOptions;
         }
 
-        public void ExecuteDbCode(BlinkDBWorkerMethod<TContext> workPayload)
+        public void ExecuteDbCode(BlinkDBWorkerMethod<TContext> workPayload, params BlinkDBWorkerMethod<TContext>[] extraWorkPayloads)
         {
             Log("Acquiring lock");
             lock (globalSyncRoot)
@@ -52,13 +52,26 @@ namespace Blink
                 Log("Opening transaction");
 
                 var tran = ctx.Database.BeginTransaction();
+                
                 try
                 {
                     Log("Performing work");
 
                     workPayload(ctx);
 
-                    Log("Work performed successfully");
+                    if (extraWorkPayloads.Length > 0)
+                    {
+                        foreach (var extraWorkPayload in extraWorkPayloads)
+                        {
+                            Log("Performing additional work item");
+                            var extraContext = this.createContext();
+                            extraContext.Database.UseTransaction(tran.UnderlyingTransaction);
+                            extraWorkPayload(extraContext);
+                            Log("Finished performing additional work item");
+                        }
+                    }
+
+                    Log( (extraWorkPayloads.Length > 0 ? "All work" : "work") + " performed successfully");
 
                 }
                 finally
@@ -67,6 +80,8 @@ namespace Blink
                     tran.Rollback();
                     Log("Rolled back transaction");
                 }
+
+               
             }
         }
     }

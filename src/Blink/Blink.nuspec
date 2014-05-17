@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>0.0.1-alpha007</version>
+    <version>0.0.1-alpha008</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/stevecooperorg/Blink</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Cached a db hash based on the fact that a context can't change structure in the middle of a run.</releaseNotes>
+    <releaseNotes>Added the ability to run multiple workloads in the same transaction, so you can create a chain of actions on different contexts, simulating two sequential operations by different users, or at different times.</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>TDD Integration EF</tags>
   </metadata>
