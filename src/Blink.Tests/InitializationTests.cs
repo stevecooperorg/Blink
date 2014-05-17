@@ -37,20 +37,43 @@ namespace Blink.Tests
 
             Assert.IsTrue(called);
         }
-        //[TestMethod]
-        //public void ShouldInitializeANewContext2()
-        //{
-        //    ShouldInitializeANewContext();
-        //}
-        //[TestMethod]
-        //public void ShouldInitializeANewContext3()
-        //{
-        //    ShouldInitializeANewContext();
-        //}
-        //[TestMethod]
-        //public void ShouldInitializeANewContext4()
-        //{
-        //    ShouldInitializeANewContext();
-        //}
+
+        [TestMethod]
+        public void ShouldAllowMultipleSequentialSessions()
+        {
+            // Create a new BlinkDBFactory;
+            var factory = Blink.BlinkDB.CreateDbFactory<TestDbContext, TestDbConfiguration>(
+                BlinkDBCreationMode.UseDBIfItAlreadyExists,
+                () => new TestDbContext());
+
+            bool called = false;
+
+            // execute code, inside a transaction, with a fresh DB every time;
+            factory.ExecuteDbCode(context =>
+            {
+                // use the context here;
+                Assert.IsNotNull(context);
+
+                context.TestObjects.Add(new TestObject { Name = "quux" });
+                context.SaveChanges();
+                Assert.AreEqual(4, context.TestObjects.Count(), "doesn't look transactional!");
+
+                called = true;
+            }, context =>
+            {
+                // make sure that the data persists into this next step;
+                Assert.AreEqual(4, context.TestObjects.Count(), "doesn't look transactional!");
+            });
+
+            Assert.IsTrue(called);
+
+            factory.ExecuteDbCode(context =>
+            {
+                // make sure that the data cidn't persist beyond the step sequence above;
+                Assert.AreEqual(3, context.TestObjects.Count(), "doesn't look transactional!");
+            });
+        }
+
+
     }
 }

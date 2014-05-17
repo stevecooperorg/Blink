@@ -5,12 +5,13 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using Blink.Util;
 
 namespace Blink
 {
-    public class BlinkDbFactory<TContext, TMigrationsConfiguration> 
-        where TContext : DbContext 
+    public class BlinkDbFactory<TContext, TMigrationsConfiguration>
+        where TContext : DbContext
         where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()
     {
 
@@ -32,7 +33,6 @@ namespace Blink
 
         public void ExecuteDbCode(BlinkDBWorkerMethod<TContext> workPayload, params BlinkDBWorkerMethod<TContext>[] extraWorkPayloads)
         {
-            Log("Acquiring lock");
             lock (globalSyncRoot)
             {
                 Log("Setting initializer");
@@ -43,45 +43,39 @@ namespace Blink
 
                 Log("Creating context");
 
-                var ctx = this.createContext();
-
-                Log("Initializing DB");
-
-                ctx.Database.Initialize(force: true);
-
-                Log("Opening transaction");
-
-                var tran = ctx.Database.BeginTransaction();
-                
-                try
+                using (var ctx = this.createContext())
                 {
-                    Log("Performing work");
 
-                    workPayload(ctx);
+                    Log("Initializing DB");
 
-                    if (extraWorkPayloads.Length > 0)
+                    ctx.Database.Initialize(force: true);
+
+                    Log("Opening transaction");
+
+                    using (var scope = new TransactionScope())
                     {
-                        foreach (var extraWorkPayload in extraWorkPayloads)
+                        Log("Performing work");
+
+                        workPayload(ctx);
+
+                        if (extraWorkPayloads.Length > 0)
                         {
-                            Log("Performing additional work item");
-                            var extraContext = this.createContext();
-                            extraContext.Database.UseTransaction(tran.UnderlyingTransaction);
-                            extraWorkPayload(extraContext);
-                            Log("Finished performing additional work item");
+                            foreach (var extraWorkPayload in extraWorkPayloads)
+                            {
+                                Log("Performing additional work item");
+                                using (var extraContext = this.createContext())
+                                {
+
+                                    //extraContext.Database.UseTransaction(tran.UnderlyingTransaction);
+                                    extraWorkPayload(extraContext);
+                                }
+                                Log("Finished performing additional work item");
+                            }
                         }
+
+                        Log((extraWorkPayloads.Length > 0 ? "All work" : "work") + " performed successfully");
                     }
-
-                    Log( (extraWorkPayloads.Length > 0 ? "All work" : "work") + " performed successfully");
-
                 }
-                finally
-                {
-                    Log("Rolling back transaction");
-                    tran.Rollback();
-                    Log("Rolled back transaction");
-                }
-
-               
             }
         }
     }

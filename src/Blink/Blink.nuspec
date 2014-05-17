@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>0.0.1-alpha008</version>
+    <version>0.0.1-alpha009</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/stevecooperorg/Blink</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Added the ability to run multiple workloads in the same transaction, so you can create a chain of actions on different contexts, simulating two sequential operations by different users, or at different times.</releaseNotes>
+    <releaseNotes>fixed a problem with multiple operations in a transaction.</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>TDD Integration EF</tags>
   </metadata>
