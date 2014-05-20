@@ -6,7 +6,7 @@ A library for resetting Entity Framework databases as fast as possible, for inte
 
 ## Introduction
 
-When performing automated testing, it can be very expensive to initialize a fresh, real database. So expensive that you avoid testing against the real database at all costs. For example, the project that inspired me to start this library takes about a minute to build its database; that's fine in a deployment scenario, but intolerable if you want to write tens or hundreds of integration tests. Blink re-initialises the DB in ~3s. That's fast enough for TDD, if you're careful about which tests you run.
+When performing automated testing, it can be very expensive to initialize a fresh, real database. So expensive that you avoid testing against the real database at all costs. For example, the project that inspired me to start this library takes about a minute to build its database; that's fine in a deployment scenario, but intolerable if you want to write tens or hundreds of integration tests. Blink re-initialises the DB in milliseconds, which puts me in the position of being able to do TDD with lots of full-stack, end-to-end database-rich tests. 
 
 This package helps you keep database initialization as fast as possible, to make it more feasible to perform database tests and give you more confidence about the operation of your database.
 
@@ -14,19 +14,23 @@ Here's how to use it...
 
 ## Usage
 
-    // Create a new BlinkDBFactory, maybe inside [TestInitialize] or [SetUp]
-    var factory = Blink.BlinkDB.CreateDbFactory<TestDbContext, TestDbConfiguration>(
-        BlinkDBCreationMode.UseDBIfItAlreadyExists,
-         () => new TestDbContext());
+        // Create a new BlinkDBFactory, maybe inside [TestInitialize] or [SetUp]
+        var factory = Blink.BlinkDB.CreateDbFactory<TestDbContext, TestDbConfiguration>(
+            BlinkDBCreationMode.UseDBIfItAlreadyExists,
+                () => new TestDbContext());
     
-    // Execute code, inside a transaction;
-    factory.ExecuteDbCode(context =>
-    {
-        // use the context here;
+        // execute code, inside a transaction, with a fresh DB;
+        factory.ExecuteDbCode(context =>
+        {
+            // use the context here; add, delete, etc.
+        }, context =>
+        {
+            // add as many extra steps as you like,
+            // each one a new DbContext based on the same
+            // underlying SQL DB, all within the same transaction
+        });
         
-    });
-    
-    // db edits are rolled back automatically
+       // db edits are rolled back automatically for all the methods passed above
 
 What does it do?
 -----
