@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>0.0.1-alpha010</version>
+    <version>0.0.1-alpha011</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/stevecooperorg/Blink</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Added a method to give more control over when the database should be re-structured, by allowing a signature-generating function to differ when seed data or other scripts change without the EDM changing.</releaseNotes>
+    <releaseNotes>Failed to expose the signature function to the public interface! Whoops.</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>TDD Integration EF</tags>
   </metadata>
