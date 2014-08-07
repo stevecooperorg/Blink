@@ -51,7 +51,15 @@ namespace Blink
             {
                 Log("Calculating DB hash");
             
-                hash = context.DbContextHash().WithoutPathCharacters();
+                hash = context.DbContextHash();
+
+                if (this.context.SignatureGenerator != null)
+                {
+                    hash += "|" + this.context.SignatureGenerator();
+                }
+
+                hash = hash.WithoutPathCharacters();
+
                 previouslyCalculatedHash = hash;
                 Log("DB hash calculated");
             } 
