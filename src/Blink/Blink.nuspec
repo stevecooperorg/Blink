@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>0.0.1-alpha011</version>
+    <version>0.0.1-alpha012</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -10,8 +10,8 @@
     <projectUrl>https://github.com/stevecooperorg/Blink</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Failed to expose the signature function to the public interface! Whoops.</releaseNotes>
-    <copyright>Copyright 2014</copyright>
+    <releaseNotes>Made the library use async/await to allow async tests.</releaseNotes>
+    <copyright>Copyright 2014-2015</copyright>
     <tags>TDD Integration EF</tags>
   </metadata>
 </package>

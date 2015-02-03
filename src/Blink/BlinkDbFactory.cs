@@ -31,14 +31,24 @@ namespace Blink
             this.preparationOptions = preparationOptions;
         }
 
-        public void ExecuteDbCode(BlinkDBWorkerMethod<TContext> workPayload, params BlinkDBWorkerMethod<TContext>[] extraWorkPayloads)
+        private static bool runningATest = false;
+
+        public async Task ExecuteDbCode(BlinkDBWorkerMethod<TContext> workPayload, params BlinkDBWorkerMethod<TContext>[] extraWorkPayloads)
         {
-            lock (globalSyncRoot)
+            if (runningATest)
+            {
+                throw new InvalidOperationException("Cannot run more than one Blink test at a time; find out how your test environment can be made to serialise tests");
+            }
+
+            runningATest = true;
+
+            //lock (globalSyncRoot)
+            try
             {
                 Log("Setting initializer");
 
                 var initializer = new BlinkDatabaseInitializer<TContext, TMigrationsConfiguration>(this.preparationOptions);
-                //var initializer = new NullDatabaseInitializer<TContext>();
+
                 Database.SetInitializer<TContext>(initializer);
 
                 Log("Creating context");
@@ -56,7 +66,7 @@ namespace Blink
                     {
                         Log("Performing work");
 
-                        workPayload(ctx);
+                        await workPayload(ctx);
 
                         if (extraWorkPayloads.Length > 0)
                         {
@@ -76,6 +86,10 @@ namespace Blink
                         Log((extraWorkPayloads.Length > 0 ? "All work" : "work") + " performed successfully");
                     }
                 }
+            }
+            finally
+            {
+                runningATest = false;
             }
         }
     }
