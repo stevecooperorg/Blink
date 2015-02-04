@@ -15,7 +15,9 @@ namespace Blink
         where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()
     {
 
-        private static object globalSyncRoot = new object();
+        //private static object globalSyncRoot = new object();
+
+        private static bool runningATest = false;
 
         private readonly BlinkDbFactoryMethod<TContext> createContext;
         private readonly BlinkPreparationOptions preparationOptions;
