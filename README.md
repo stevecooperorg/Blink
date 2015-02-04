@@ -20,10 +20,10 @@ Here's how to use it...
                 () => new TestDbContext());
     
         // execute code, inside a transaction, with a fresh DB;
-        factory.ExecuteDbCode(context =>
+        await factory.ExecuteDbCode(async context =>
         {
             // use the context here; add, delete, etc.
-        }, context =>
+        }, async context =>
         {
             // add as many extra steps as you like,
             // each one a new DbContext based on the same
@@ -49,7 +49,7 @@ Blink comes with two modes;
 
 ## Gotchas
 
-**Threading.** The threading is pretty brutal. There is a global lock applied to any work done on the database. That makes it safe, but there's no way to run, say, three sets of tests over different databases.
+**Threading.** The threading is pretty brutal. It's up to you to make sure that no tests are run simulateously. This is because thre is only one database, and since it's a global resource, it can't be shared between tests. We track whether a test is already running, and reject any attempt to run a second concurrently. It's therefore up to you to work out, in your test framework, how you'd like to lock these things off so that they are executed concurrently. 
 
 **Staleness.** While the library will keep your database initializations fast, it does this by avoiding all the expensive tests that EF to make sure the database hasn't gone stale. So several things might cause the caching to go wrong;
 
