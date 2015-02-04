@@ -23,5 +23,7 @@ namespace Blink
         /// </returns>
         public DatabaseStateSignatureGenerator SignatureGenerator { get; set; }
 
+        public bool EnableLogging { get; set; }
+
     }
 }

@@ -35,6 +35,16 @@ namespace Blink
         {
             lock (globalSyncRoot)
             {
+                if (this.preparationOptions.EnableLogging)
+                {
+                    Logging.Enable();
+                }
+                else
+                {
+                    Logging.Disable();
+                }
+
+
                 Log("Setting initializer");
 
                 var initializer = new BlinkDatabaseInitializer<TContext, TMigrationsConfiguration>(this.preparationOptions);

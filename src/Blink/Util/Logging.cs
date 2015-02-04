@@ -12,6 +12,18 @@ namespace Blink.Util
         private static Stopwatch stopwatch;
         private static long previousLog = 0;
 
+        private static bool enabled = false;
+
+        public static void Enable()
+        {
+            enabled = true;
+        }
+
+        public static void Disable()
+        {
+            enabled = false;
+        }
+
         public static void Log(string message)
         {
             if (stopwatch == null)
@@ -23,7 +35,10 @@ namespace Blink.Util
             var msSinceLastLog = now - previousLog;
             previousLog = now;
 
-            Debug.WriteLine(string.Format("{0:D10}ms: {1}", msSinceLastLog , message));
+            if (enabled)
+            {
+                Debug.WriteLine(string.Format("{0:D10}ms: {1}", msSinceLastLog, message));
+            }
         }
 
     }
