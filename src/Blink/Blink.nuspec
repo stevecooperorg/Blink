@@ -10,8 +10,8 @@
     <projectUrl>https://github.com/stevecooperorg/Blink</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Shut up, Blink.</releaseNotes>
-    <copyright>Copyright 2014</copyright>
+    <releaseNotes>Made the library use async/await to allow async tests.</releaseNotes>
+    <copyright>Copyright 2014-2015</copyright>
     <tags>TDD Integration EF</tags>
   </metadata>
 </package>

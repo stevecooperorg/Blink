@@ -26,6 +26,7 @@ namespace Blink
 
         private static string previouslyCalculatedHash = null;
 
+
         public void InitializeDatabase(TContext context)
         {
             Log("Initializing " + context.Database.Connection.Database);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Blink.Tests.TestDb;
 using Blink.Tests.TestDb.Migrations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,7 +11,7 @@ namespace Blink.Tests
     public class InitializationTests
     {
         [TestMethod]
-        public void ShouldInitializeANewContext()
+        public async Task ShouldInitializeANewContext()
         {
             // Create a new BlinkDBFactory;
             var factory = Blink.BlinkDB.CreateDbFactory<TestDbContext, TestDbConfiguration>(
@@ -22,7 +23,7 @@ namespace Blink.Tests
             for (var i = 0; i < 5; i++)
             {
                 // execute code, inside a transaction, with a fresh DB every time;
-                factory.ExecuteDbCode(context =>
+                await factory.ExecuteDbCode(async context =>
                 {
                     // use the context here;
                     Assert.IsNotNull(context);
@@ -39,7 +40,7 @@ namespace Blink.Tests
         }
 
         [TestMethod]
-        public void ShouldAllowMultipleSequentialSessions()
+        public async Task ShouldAllowMultipleSequentialSessions()
         {
             // Create a new BlinkDBFactory;
             var factory = Blink.BlinkDB.CreateDbFactory<TestDbContext, TestDbConfiguration>(
@@ -49,7 +50,7 @@ namespace Blink.Tests
             bool called = false;
 
             // execute code, inside a transaction, with a fresh DB every time;
-            factory.ExecuteDbCode(context =>
+            await factory.ExecuteDbCode(async context =>
             {
                 Assert.AreEqual(3, context.TestObjects.Count(), "should start with three");
 
@@ -58,7 +59,7 @@ namespace Blink.Tests
                 Assert.AreEqual(4, context.TestObjects.Count(), "didn't save as expected");
 
                 called = true;
-            }, context =>
+            }, async context =>
             {
                 // make sure that the data persists into this next step;
                 Assert.AreEqual(4, context.TestObjects.Count(), "content was not persisted in chain!");
@@ -66,7 +67,7 @@ namespace Blink.Tests
 
             Assert.IsTrue(called);
 
-            factory.ExecuteDbCode(context =>
+            await factory.ExecuteDbCode(async context =>
             {
                 // make sure that the data cidn't persist beyond the step sequence above;
                 Assert.AreEqual(3, context.TestObjects.Count(), "doesn't look transactional - we should have rolled back to three!");
