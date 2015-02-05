@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Blink.Tests.TestDb;
 using Blink.Tests.TestDb.Migrations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Blink.Tests
 {
@@ -37,6 +39,53 @@ namespace Blink.Tests
             }
 
             Assert.IsTrue(called);
+        }
+
+        [TestMethod]
+        public async Task ShouldNotThreadSwitchToProtectTransactions()
+        {
+
+            // Create a new BlinkDBFactory;
+            var factory = Blink.BlinkDB.CreateDbFactory<TestDbContext, TestDbConfiguration>(
+                BlinkDBCreationMode.UseDBIfItAlreadyExists,
+                () => new TestDbContext());
+
+
+            int iterator = 0;
+            bool failed = false;
+            int threadId = -1;
+
+            BlinkDBWorkerMethod<TestDbContext> singleWorkItem = async context =>
+            {
+                var currentThreadId = Thread.CurrentThread.ManagedThreadId;
+                if (threadId == -1)
+                {
+                    threadId = currentThreadId;
+                } 
+                else if (currentThreadId != threadId)
+                {
+                    // we've thread switched;
+                    failed = true;
+                    throw new Exception("Should not thread switch");
+                }
+                
+                iterator++;
+                context.TestObjects.Add(new TestObject { Name = "quux" });
+                context.SaveChanges();
+            };
+
+            var lotsOfWorkItems = new List<BlinkDBWorkerMethod<TestDbContext>>();
+
+            for (var i = 0; i < 1000; i++)
+            {
+                lotsOfWorkItems.Add(singleWorkItem);
+            }
+
+            await factory.ExecuteDbCode(singleWorkItem, lotsOfWorkItems.ToArray());
+
+            Assert.AreEqual(1001, iterator);
+            Assert.IsFalse(failed,"at some point we thread switched");
+
         }
 
         [TestMethod]

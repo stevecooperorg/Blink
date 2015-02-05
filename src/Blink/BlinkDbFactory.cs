@@ -55,30 +55,31 @@ namespace Blink
 
                 using (var ctx = this.createContext())
                 {
-
                     Log("Initializing DB");
 
                     ctx.Database.Initialize(force: true);
 
                     Log("Opening transaction");
 
-                    using (var scope = new TransactionScope())
+                    using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                     {
                         Log("Performing work");
 
+                        // do the work on the first, initialised context
                         await workPayload(ctx);
 
                         if (extraWorkPayloads.Length > 0)
                         {
                             foreach (var extraWorkPayload in extraWorkPayloads)
                             {
+                                // do extra work on a new context but in the same transaction
                                 Log("Performing additional work item");
+
                                 using (var extraContext = this.createContext())
                                 {
-
-                                    //extraContext.Database.UseTransaction(tran.UnderlyingTransaction);
                                     extraWorkPayload(extraContext);
                                 }
+
                                 Log("Finished performing additional work item");
                             }
                         }
