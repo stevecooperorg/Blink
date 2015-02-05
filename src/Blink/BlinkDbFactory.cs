@@ -77,7 +77,7 @@ namespace Blink
 
                                 using (var extraContext = this.createContext())
                                 {
-                                    extraWorkPayload(extraContext);
+                                    await extraWorkPayload(extraContext);
                                 }
 
                                 Log("Finished performing additional work item");

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>0.0.1-alpha015</version>
+    <version>0.0.1-alpha016</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -10,8 +10,8 @@
     <projectUrl>https://github.com/stevecooperorg/Blink</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Another attempt to fix the damned async thing. Again.</releaseNotes>
+    <releaseNotes>Another attempt to fix the damned async thing. Again (mark 2).</releaseNotes>
     <copyright>Copyright 2014-2015</copyright>
     <tags>TDD Integration EF</tags>
   </metadata>
-</package>
+</package>;
