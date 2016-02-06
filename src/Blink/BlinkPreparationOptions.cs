@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Blink
 {
-    internal class BlinkPreparationOptions
+    public class BlinkPreparationOptions
     {
         public BlinkDBCreationMode DBCreationMode { get; private set; }
         public BlinkPreparationOptions(BlinkDBCreationMode dbCreationMode)

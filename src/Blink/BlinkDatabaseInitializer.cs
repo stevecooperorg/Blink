@@ -13,7 +13,7 @@ using Blink.Util;
 
 namespace Blink
 {
-    class BlinkDatabaseInitializer<TContext, TMigrationsConfiguration> : IDatabaseInitializer<TContext>
+    public class BlinkDatabaseInitializer<TContext, TMigrationsConfiguration> : IDatabaseInitializer<TContext>
         where TContext : DbContext
         where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()
     {
